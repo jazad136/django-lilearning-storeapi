@@ -34,3 +34,14 @@ class ProductList(ListAPIView):
                 sale_end__gte=now
             )
         return queryset
+        
+class ProductCreate(CreateAPIView):
+    serializer_class = ProductSerializer
+
+    def create(self, request, *args, **kwargs):
+        try:
+            price = request.data.get('price')
+            if price is not None and float(price) <= 0.0:
+                raise ValidationError({'price': 'Must be above $0.00' })
+        except ValueError:
+            raise ValidationError({'price': 'A valid number is required'})
