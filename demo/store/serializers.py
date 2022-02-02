@@ -1,6 +1,12 @@
+
 from rest_framework import serializers
 
-from store.models import Product
+from store.models import Product, ShoppingCartItem
+
+class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingCartItem
+        fields = ('product', 'quantity')
 
 class ProductSerializer(serializers.ModelSerializer):
     is_on_sale = serializers.BooleanField(read_only=True)
@@ -9,8 +15,11 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'name', 'description', 'price', 'sale_start', 'sale_end'
-        ,'is_on_sale', 'current_price'
+        ,'is_on_sale', 'current_price', 'cart_items'
         )
+    
+    def get_cart_items(self, instance):
+        items = ShoppingCartItem.objects.filter(product=instance)
         
 
     # def to_representation(self, instance):
