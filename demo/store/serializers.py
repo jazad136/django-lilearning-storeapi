@@ -18,6 +18,16 @@ class ProductSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(
         min_value=1.00, max_value=100000,
         max_digits=None, decimal_places=2)
+    sale_start = serializers.DateTimeField(
+        input_formats=['%I:%M %p %d %B %Y'], format=None, allow_null=True,
+        help_text='Accepted format is "12:01 PM 16 April 2019"',
+        style={'input_type': 'text', 'placeholder': '12:01 AM 28 July 2019'}
+    )
+    sale_end = serializers.DateTimeField(
+        input_formats=['%I:%M %p %d %B %Y'], format=None, allow_null=True,
+        help_text='Accepted format is "12:01 PM 16 April 2019"',
+        style={'input_type': 'text', 'placeholder': '12:01 AM 28 July 2019'}
+    )
     
     class Meta:
         model = Product
@@ -29,9 +39,9 @@ class ProductSerializer(serializers.ModelSerializer):
         items = ShoppingCartItem.objects.filter(product=instance)
         return CartItemSerializer(items, many=True).data
 
-    # def to_representation(self, instance):
-    #     data = super().to_representation(instance)
-    #     data['is_on_sale'] = instance.is_on_sale()
-    #     data['current_price'] = instance.current_price()
-    #     return data
-
+class ProductStatSerializer(serializers.Serializer):
+    stats = serializers.DictField(
+        child = serializers.ListField(
+            child = serializers.IntegerField(),
+        )
+    )   
