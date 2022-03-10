@@ -71,6 +71,7 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
                 'description': product['description'],
                 'price': product['price']
             })
+        return response
 
 class ProductStats(GenericAPIView):
     lookup_field = 'id'
